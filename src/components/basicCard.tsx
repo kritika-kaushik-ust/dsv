@@ -22,8 +22,17 @@ const sortOptions = [
 export default function BasicCard() {
   const [sortType, setSortType] = useState(sortOptions[0]);
   const [users, setUsers] = useState(appdata);
+  const [removedUsers, setRemovedUsers] = useState([]);
   const [actBtn, setActBtn] = useState(sortOptions[0])
 
+  const removedUser=(index)=>{
+    removedUsers.push(users[index]);
+    setRemovedUsers([...removedUsers]);
+    console.log(removedUsers);
+    const newUser=[...users].filter((_,i)=>i!=index);
+    setUsers(newUser);
+    console.log(index);
+  }
   useEffect(() => {
     const newUsers = [...users].sort(sortByProperty(sortType.property));
     setUsers(newUsers);
@@ -36,14 +45,10 @@ export default function BasicCard() {
     //console.log(`Picked sort type is ${e.target.value}`)
     setSortType(selectedType);
   };
-
  function clickHandler(sort){
     setActBtn(sort);
     setSortType(sort);
-    console.log(sort);
   }
-
-  console.log(users);
 
   return (
     <div className="row my-5">       
@@ -93,7 +98,7 @@ export default function BasicCard() {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">Remove</Button>
+              <Button size="small" onClick={()=>removedUser(index)}>Remove</Button>
             </CardActions>
           </Card>
         );
