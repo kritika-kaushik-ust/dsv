@@ -1,6 +1,8 @@
 import "./styles.css";
 import { useReducer, useState } from "react";
 import { Button, TextField } from "@mui/material";
+import BasicCard  from "./components/basicCard";
+
 
 /** Instructions
    0. Fork this codesandbox and sync it with your github 
@@ -48,6 +50,7 @@ export default function App() {
 
   return (
     <div className="App">
+      <BasicCard></BasicCard>
       <p style={{ marginBottom: 0 }}>Count: {countState.count}</p>
       <TextField
         defaultValue={numberInput}
