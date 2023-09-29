@@ -1,11 +1,10 @@
 class Helper {
-    // Simple function
     static randomStr(len, arr) {
-        let ans = "";
+        let randomString = "";
         for (let i = len; i > 0; i--) {
-          ans += arr[Math.floor(Math.random() * arr.length)];
+            randomString += arr[Math.floor(Math.random() * arr.length)];
         }
-        return ans;
+        return randomString;
       }
    
   }

@@ -1,10 +1,8 @@
 import "./styles.css";
 import { useReducer, useState } from "react";
 import { Button, TextField } from "@mui/material";
-import BasicCard  from "./components/basicCard";
+import BasicCard from "./components/basicCard";
 import Helper from "../utils/helper";
-
-
 
 /** Instructions
    0. Fork this codesandbox and sync it with your github 
@@ -40,18 +38,22 @@ function reducer(state, action) {
     case "decrement":
       return { count: state.count - 1 };
     case "incrementRandomly":
-      return { count: Math.floor(Math.random()*10)+ state.count};
+      return { count: Math.floor(Math.random() * 10) + state.count };
     case "decrementByInput":
       return { count: state.count - action.value };
+    case "incrementToOdd":
+      return {
+        count: state.count % 2 == 0 ? state.count + 1 : state.count + 2,
+      };
     case "reset":
-      return { count: 0};
+      return { count: 0 };
     default:
       throw new Error();
   }
 }
 
 export default function App() {
-  const [numberInput,setNumberInput] = useState(0);
+  const [numberInput, setNumberInput] = useState(0);
   const [countState, dispatch] = useReducer(reducer, { count: 0 });
   return (
     <div className="App">
@@ -62,12 +64,15 @@ export default function App() {
         type="number"
         onChange={(e) => {
           setNumberInput(e.target.value);
-          }}
-        style={{ display: "block" }}/>
+        }}
+        style={{ display: "block" }}
+      />
       <Button
         variant="contained"
         onClick={() => dispatch({ type: "decrement" })}
-      >-</Button>
+      >
+        -
+      </Button>
       <Button
         variant="contained"
         onClick={() => dispatch({ type: "increment" })}
@@ -79,13 +84,24 @@ export default function App() {
         onClick={() => dispatch({ type: "incrementRandomly" })}
       >
         increment randomly
-      </Button> 
+      </Button>
       <Button
         variant="contained"
-        onClick={() => dispatch({ type: "decrementByInput" , value:numberInput})}
+        onClick={() =>
+          dispatch({ type: "decrementByInput", value: numberInput })
+        }
       >
         decrement input
-      </Button>     
+      </Button>
+      <Button variant="contained" onClick={() => dispatch({ type: "reset" })}>
+        reset
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => dispatch({ type: "incrementToOdd" })}
+      >
+        Increment by Odd
+      </Button>
     </div>
   );
 }
