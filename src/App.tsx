@@ -43,7 +43,6 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [users] = useState([]);
   const [numberInput] = useState(0);
   const [countState, dispatch] = useReducer(reducer, { count: 0 });
   return (

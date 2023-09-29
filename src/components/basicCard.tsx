@@ -1,6 +1,4 @@
 import React, { useState ,useEffect } from "react";
-import CardActions from "@mui/material/CardActions";
-
 import {Button, TextField} from "@mui/material";
 import userData from "../data";
 import UserCard from "../views/userCard";
@@ -28,6 +26,14 @@ export default function BasicCard() {
     const newUser=[...users].filter((_,i)=>i!=index);
     setUsers(newUser);
   }
+  const restoredUser=(index)=>{
+    console.log(removedUsers);
+    const userRemoved=[...removedUsers].filter((_,i)=>i!=index); 
+    console.log(userRemoved);
+    setRemovedUsers([...userRemoved]);  
+    users.push(removedUsers[index])
+    console.log(users);
+  }
   useEffect(() => {
     const newUsers = [...users].sort(sortByProperty(sortType.property));
     setUsers(newUsers);
@@ -37,7 +43,6 @@ export default function BasicCard() {
     const selectedType = sortOptions.find(
       (type) => type.title === e.target.value
     );
-    //console.log(`Picked sort type is ${e.target.value}`)
     setSortType(selectedType);
   };
  function clickHandler(sort){
@@ -52,15 +57,19 @@ function search(text){
       setUsers(searchedUser);
     }else{
       let searchedRemovedUser=removedUsers.filter(a=>a.name.toLowerCase() === text.toLowerCase());
-      if(searchedRemovedUser){
+      if(searchedRemovedUser && searchedRemovedUser.length){
         setRemovedUsers(searchedUser);
         setRestore(true);
-        console.log(removedUsers);
+        console.log(restore);
       }
     }
   }
 }
-
+if(!users?.length && !removedUsers?.length){
+  return(
+<div>No users found</div>
+  );
+}
   return (
     <div className="row my-5">       
       <select onChange={changeSortType}>
@@ -79,23 +88,21 @@ function search(text){
        <Button
         variant="contained"
         onClick={()=>search(text)}
-      >Search</Button>
-      {users.map((user, index) => {
+      >Search</Button>          
+       {text!="" && removedUsers.length && removedUsers.map((user, index) => {
+        return (
+          <div>
+            <UserCard user={user} key={index} ></UserCard> 
+            <Button size="small" onClick={()=>restoredUser(index)}>Restore</Button>
+          </div>
+        );
+      })}
+        {users.map((user, index) => {
         return (
           <div>
             <UserCard user={user} key={index} ></UserCard>            
             <Button size="small" onClick={()=>removedUser(index)}>Remove</Button>
             <Button size="small"style={{display: !restore ? 'none' : ''}} onClick={()=>removedUser(index)}>Restore</Button>
-          </div>
-        );
-      })}
-      
-       {removedUsers.map((user, index) => {
-        return (
-          <div>
-            <UserCard user={user} key={index} ></UserCard>            
-            <Button size="small" onClick={()=>removedUser(index)}>Remove</Button>
-            <Button size="small" onClick={()=>removedUser(index)}>Restore</Button>
           </div>
         );
       })}
