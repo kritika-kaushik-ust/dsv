@@ -1,20 +1,14 @@
 import React, { useState ,useEffect } from "react";
-import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+
+import {Button, TextField} from "@mui/material";
 import userData from "../data";
+import UserCard from "../views/userCard";
+
 import sortByProperty from "../utils/util";
 
 const appdata = userData.filter((user) => user.age >= 18);
-function randomStr(len, arr) {
-  let ans = "";
-  for (let i = len; i > 0; i--) {
-    ans += arr[Math.floor(Math.random() * arr.length)];
-  }
-  return ans;
-}
+
 const sortOptions = [
   { title: "By company name", property: "company" },
   { title: "By age", property: "age" }
@@ -23,15 +17,16 @@ export default function BasicCard() {
   const [sortType, setSortType] = useState(sortOptions[0]);
   const [users, setUsers] = useState(appdata);
   const [removedUsers, setRemovedUsers] = useState([]);
-  const [actBtn, setActBtn] = useState(sortOptions[0])
+  const [actBtn, setActBtn] = useState(sortOptions[0]);
+  const [text,setText] = useState("");
+  const [restore,setRestore]=useState(false);
+
 
   const removedUser=(index)=>{
     removedUsers.push(users[index]);
     setRemovedUsers([...removedUsers]);
-    console.log(removedUsers);
     const newUser=[...users].filter((_,i)=>i!=index);
     setUsers(newUser);
-    console.log(index);
   }
   useEffect(() => {
     const newUsers = [...users].sort(sortByProperty(sortType.property));
@@ -49,6 +44,22 @@ export default function BasicCard() {
     setActBtn(sort);
     setSortType(sort);
   }
+  
+function search(text){
+  if(text && text!='' && text !=null){
+    let searchedUser= users.filter(a=>a.name.toLowerCase() === text.toLowerCase())
+    if(searchedUser && searchedUser.length){
+      setUsers(searchedUser);
+    }else{
+      let searchedRemovedUser=removedUsers.filter(a=>a.name.toLowerCase() === text.toLowerCase());
+      if(searchedRemovedUser){
+        setRemovedUsers(searchedUser);
+        setRestore(true);
+        console.log(removedUsers);
+      }
+    }
+  }
+}
 
   return (
     <div className="row my-5">       
@@ -57,50 +68,35 @@ export default function BasicCard() {
           return <option key={index}>{title}</option>;
         })}
       </select>
+      <p style={{ marginBottom: 0, marginTop: 30 }}>Search for a user</p>
+      <TextField
+        defaultValue={text}
+        style={{ display: "block", margin: "auto" }}
+        onChange={(e) => {
+          setText(e.target.value)
+          }}
+      />
+       <Button
+        variant="contained"
+        onClick={()=>search(text)}
+      >Search</Button>
       {users.map((user, index) => {
         return (
-          <Card key={index} sx={{ minWidth: 275 }}>
-            <CardContent>
-              <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                Id: {randomStr(6, "ABCDEF123456")}
-              </Typography>
-              <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                Name : {user.name}
-              </Typography>
-              <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                Age : {user.age}
-              </Typography>
-              <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                Address : {user.address.street} , {user.address.suite} , {user.address.city} , {user.address.zipcode}
-              </Typography>
-              <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                Company: {user.company.name}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" onClick={()=>removedUser(index)}>Remove</Button>
-            </CardActions>
-          </Card>
+          <div>
+            <UserCard user={user} key={index} ></UserCard>            
+            <Button size="small" onClick={()=>removedUser(index)}>Remove</Button>
+            <Button size="small"style={{display: !restore ? 'none' : ''}} onClick={()=>removedUser(index)}>Restore</Button>
+          </div>
+        );
+      })}
+      
+       {removedUsers.map((user, index) => {
+        return (
+          <div>
+            <UserCard user={user} key={index} ></UserCard>            
+            <Button size="small" onClick={()=>removedUser(index)}>Remove</Button>
+            <Button size="small" onClick={()=>removedUser(index)}>Restore</Button>
+          </div>
         );
       })}
     </div>
