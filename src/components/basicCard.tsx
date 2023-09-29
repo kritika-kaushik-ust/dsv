@@ -101,7 +101,8 @@ export default function BasicCard() {
             </div>
           );
         })}
-      {users.map((user, index) => {
+      {(text != "" &&
+        !removedUsers) || text =="" && users.map((user, index) => {
         return (
           <div>
             <UserCard user={user} key={index}></UserCard>
