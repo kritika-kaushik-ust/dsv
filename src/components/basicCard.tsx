@@ -28,10 +28,10 @@ export default function BasicCard() {
   }
   const restoredUser=(index)=>{
     console.log(removedUsers);
-    const userRemoved=[...removedUsers].filter((_,i)=>i!=index); 
-    console.log(userRemoved);
-    setRemovedUsers([...userRemoved]);  
     users.push(removedUsers[index])
+    const userRemoved=[...removedUsers].filter((_,i)=>i!=index); 
+    console.log(userRemoved);    
+    setRemovedUsers([...userRemoved]);  
     console.log(users);
   }
   useEffect(() => {
@@ -58,7 +58,7 @@ function search(text){
     }else{
       let searchedRemovedUser=removedUsers.filter(a=>a.name.toLowerCase() === text.toLowerCase());
       if(searchedRemovedUser && searchedRemovedUser.length){
-        setRemovedUsers(searchedUser);
+        setRemovedUsers(searchedRemovedUser);
         setRestore(true);
         console.log(restore);
       }
