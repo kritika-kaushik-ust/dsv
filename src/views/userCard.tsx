@@ -1,14 +1,8 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import Helper from "../utils/helper";
 
-function randomStr(len, arr) {
-    let ans = "";
-    for (let i = len; i > 0; i--) {
-      ans += arr[Math.floor(Math.random() * arr.length)];
-    }
-    return ans;
-  }
   interface DisplayTableProps {
     name: string,
     age: number,
@@ -28,7 +22,7 @@ export default function userCard({user}:Props) {
                 color="text.secondary"
                 gutterBottom
               > 
-               Id: {randomStr(6, "ABCDEF123456")}
+               Id: {Helper.randomStr(6, "ABCDEF123456")}
               </Typography>
               <Typography
                 sx={{ fontSize: 14 }}

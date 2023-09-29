@@ -2,6 +2,8 @@ import "./styles.css";
 import { useReducer, useState } from "react";
 import { Button, TextField } from "@mui/material";
 import BasicCard  from "./components/basicCard";
+import Helper from "../utils/helper";
+
 
 
 /** Instructions
@@ -37,13 +39,19 @@ function reducer(state, action) {
       return { count: state.count + 1 };
     case "decrement":
       return { count: state.count - 1 };
+    case "incrementRandomly":
+      return { count: Math.floor(Math.random()*10)+ state.count};
+    case "decrementByInput":
+      return { count: state.count - action.value };
+    case "reset":
+      return { count: 0};
     default:
       throw new Error();
   }
 }
 
 export default function App() {
-  const [numberInput] = useState(0);
+  const [numberInput,setNumberInput] = useState(0);
   const [countState, dispatch] = useReducer(reducer, { count: 0 });
   return (
     <div className="App">
@@ -52,6 +60,9 @@ export default function App() {
       <TextField
         defaultValue={numberInput}
         type="number"
+        onChange={(e) => {
+          setNumberInput(e.target.value);
+          }}
         style={{ display: "block" }}/>
       <Button
         variant="contained"
@@ -62,6 +73,18 @@ export default function App() {
         onClick={() => dispatch({ type: "increment" })}
       >
         +
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => dispatch({ type: "incrementRandomly" })}
+      >
+        increment randomly
+      </Button> 
+      <Button
+        variant="contained"
+        onClick={() => dispatch({ type: "decrementByInput" , value:numberInput})}
+      >
+        decrement input
       </Button>     
     </div>
   );
